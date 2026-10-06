@@ -4,11 +4,15 @@ Sample merchant app for the semi-integrated BluePOS Go flow on iOS 13 and later.
 
 The private Bluefin package is not in this repository. `BluePosGoSDK/` is a local stand-in with the same call surface, so the project builds before you receive the distribution package. It does not talk to a reader or to Bluefin. Replace it before certification or production testing.
 
+
 ## Requirements
 
-- Xcode 14 or later, with the iOS 13 simulator or a physical device
-- A signing team set on the `BluePosGoSample` target
-- For a real handoff: BluePOS Go installed and provisioned on a physical device, plus the Bluefin `BluePosGoSDK` package
+- Xcode with Swift Package Manager support.
+- iOS 13 or later. This is the package minimum, not a compatibility promise for every installed BluePOS Go build.
+- BluePOS Go installed and provisioned on the physical test device. Pin the SDK version and the BluePOS Go build you tested, and verify that pair on a physical device.
+- A unique URL scheme that BluePOS Go can use to reopen your app.
+
+The package product is named `BluePosGoSDK` and the package links the system `z` library automatically.
 
 The sample deployment target is iOS 13. URL return is handled in `SceneDelegate` and `AppDelegate`, not `onOpenURL`, because the SwiftUI `onOpenURL` modifier is iOS 14+.
 
@@ -40,7 +44,7 @@ Change the scheme to one that belongs to your organization, in both `Info.plist`
 
 1. Remove the local package reference from the project.
 2. Choose **File > Add Package Dependencies…** and enter the package location supplied by Bluefin. Add the `BluePosGoSDK` product to the application target.
-3. Delete the demo return in `CheckoutModel.simulateReturn`. With the real package, BluePOS Go reopens the app and `SceneDelegate` forwards that URL.
+3. BluePOS Go reopens the app and `SceneDelegate` forwards that URL.
 4. Keep credentials in an authenticated backend or protected configuration. Do not commit a production Basic token or account ID.
 5. Test on a physical device with BluePOS Go installed. Confirm success, decline, cancellation, missing-app, and cold-return.
 
@@ -74,7 +78,7 @@ Refunds need `PaymentCredentials`. A save is a zero-amount card-on-file request.
 
 ```
 BluePosGoSample/
-  BluePosGoSDK/                          Local stand-in package
+  BluePosGoSDK/                          Bluefin Package
   BluePosGoSample/BluePosGoSample.xcodeproj
   BluePosGoSample/BluePosGoSample/       App sources and Info.plist
 ```
